@@ -41,7 +41,8 @@ class Game:
                         self.player.go_right()
                     if event.key == pygame.K_SPACE:
                         self.player.attack = True
-
+                    if event.key==pygame.K_UP:
+                        self.player.go_jump()
                 if event.type == pygame.KEYUP:
                     if event.key in [pygame.K_LEFT, pygame.K_RIGHT]:
                         self.player.stop()

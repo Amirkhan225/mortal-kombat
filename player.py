@@ -26,7 +26,9 @@ class Player(pygame.sprite.Sprite):
         self.appercot = []
         for row in data['appercot']:
             self.appercot += self.append_img(ss.get_image(*row), flip=flip)
-
+        self.jump=[]
+        for row in data['jump']:
+            self.jump+=self.append_img(ss.get_image(*row),flip=flip)
         self.attack = False
         self.image = self.standing[0]
         self.mask = pygame.mask.from_surface(self.image)
@@ -37,7 +39,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = y
         self.hit_cooldown = 0
         self.enemy = None
-
+        self.jumping=True
+        self.jump_indx=1
     def read_json(self, charachter):
         with open('animation.json', 'r') as f:
             data = json.load(f)
@@ -57,6 +60,15 @@ class Player(pygame.sprite.Sprite):
         if not self.attack:
             self.image = self.standing[self.stand_indx % len(self.standing)]
             self.stand_indx += 1
+        elif not self.attack:
+            self.image=self.standing[self.stand_indx % len(self.standing)]
+            self.stand_indx+=1
+            if self.jumping:
+                self.image=self.jump[self.jump_indx % len(self.jump)]
+                self.jump_indx+=1
+                if self.jump_indx>=len(self.jump):
+                    self.jumping=False
+                    self.jump_indx=0
         else:
             self.image = self.appercot[self.appercot_indx % len(self.appercot)]
             self.appercot_indx += 1
@@ -83,3 +95,5 @@ class Player(pygame.sprite.Sprite):
     def stop(self):
         self.change_x = 0
 
+    def go_jump(self):
+        self.change_y=3
